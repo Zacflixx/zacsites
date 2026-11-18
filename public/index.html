@@ -11,6 +11,8 @@
 @media(max-width:370px){.shell{margin:0 14px}.grid{gap:10px}.intro .clock{display:none}.card h3{font-size:16px}.art{height:150px}.app-meta{padding:13px}.claude-art .art-title{font-size:24px}.card,.card-link{min-height:265px}}
 
 .vault-link{display:grid;place-items:center;width:48px;height:48px;color:#ce7856;text-decoration:none;border:0;background:none;padding:0;flex:none}.vault-link svg{width:43px;height:43px;opacity:0.4;transform:none;transition:none;animation:none}.vault-link:focus-visible{outline:2px solid #b97956;outline-offset:3px;border-radius:50%}.reorder{display:none;position:absolute;top:12px;left:12px;gap:4px;z-index:2}.editing .reorder{display:flex}.reorder button{border:1px solid #00000010;background:#fffffff0;color:#30382c;border-radius:5px;width:28px;height:27px;cursor:pointer}.reorder button:disabled{opacity:.4;cursor:default}.editing .app-tag{visibility:hidden}@media(max-width:800px){.head-right>.small{display:none}}@media(max-width:540px){.vault-link{width:44px;height:44px}.vault-link svg{width:37px;height:37px}.head-right{gap:8px}.head-right .avatar{width:31px;height:31px}}
+
+.lab-art .lab-screen{position:absolute;background:#f8fbf1;border:1px solid #91a87b;border-radius:5px;padding:9px;box-shadow:0 5px 16px #36532912}.lab-screen.wide{width:142px;height:84px;left:23px;top:42px;transform:rotate(-5deg)}.lab-screen.medium{width:69px;height:90px;right:41px;top:47px;transform:rotate(7deg)}.lab-screen.small{width:38px;height:65px;right:22px;top:85px;transform:rotate(13deg);padding:5px}.lab-screen i{display:block;height:4px;width:55%;background:#b3c89b;border-radius:2px;margin-bottom:8px}.lab-screen b{display:block;height:22px;background:#dce8c9;border-radius:2px;margin-bottom:5px}.lab-screen em{display:block;height:12px;background:repeating-linear-gradient(to bottom,#b3c89b 0,#b3c89b 1px,transparent 1px,transparent 4px)}.lab-art-name{position:absolute;left:24px;bottom:12px;color:#536b3f;font-size:19px;font-weight:500;letter-spacing:-.8px}.lab-art-name>span{font-weight:750}@media(max-width:600px){.lab-screen.wide{left:12px;width:100px;height:70px}.lab-screen.medium{right:18px;width:52px;height:75px}.lab-screen.small{right:10px;width:32px;height:60px}.lab-art-name{font-size:17px;left:16px}}
 </style>
 </head>
 <body>
@@ -18,11 +20,11 @@
 <header><div class="brand"><svg aria-hidden="true"><use href="#spark"/></svg>isaac<span style="color:#8aa474">.</span></div><div class="head-right"><a class="vault-link" href="vault.html" aria-label="Open private vault"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><path d="M32 32C8 32 8 8 20 8C32 8 32 20 32 32C32 8 56 8 56 20C56 32 44 32 32 32C56 32 56 56 44 56C32 56 32 44 32 32C32 56 8 56 8 44C8 32 20 32 32 32Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><span class="small">Personal workspace / 01</span><div class="avatar" aria-label="Isaac's workspace">I</div></div></header>
 <main class="shell"><section class="intro"><div><div class="eyebrow"><span class="dot"></span>The Isaac collection</div><h1>One space.<br><span>Every side of you.</span></h1><p>Create. Plan. Explore. Pick up where you left off.</p></div><div class="clock"><time id="clock"></time><span class="small" id="date"></span></div></section>
 
-<section aria-labelledby="apps-title"><div class="toolbar"><div class="title-row"><h2 id="apps-title">Your daily rotation</h2><span class="count" id="count">08</span></div><div class="tools"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="Find an app…" aria-label="Find an app"></label><button class="manage" id="manage" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 17 12-12 3 3L7 20H4v-3ZM14 7l3 3"/></svg><span>Edit apps</span></button></div></div><div class="grid" id="grid"></div><div class="footnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></svg><span id="hint">All 8 apps connected. Your links open in a new tab.</span></div></section>
-<footer><span><strong>isaac.</strong> &nbsp; Your everyday, connected.</span><span>Eight destinations. One starting point.</span></footer></main>
+<section aria-labelledby="apps-title"><div class="toolbar"><div class="title-row"><h2 id="apps-title">Your daily rotation</h2><span class="count" id="count">09</span></div><div class="tools"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="Find an app…" aria-label="Find an app"></label><button class="manage" id="manage" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 17 12-12 3 3L7 20H4v-3ZM14 7l3 3"/></svg><span>Edit apps</span></button></div></div><div class="grid" id="grid"></div><div class="footnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></svg><span id="hint">All 9 apps connected. Your links open in a new tab.</span></div></section>
+<footer><span><strong>isaac.</strong> &nbsp; Your everyday, connected.</span><span>Your everyday. One starting point.</span></footer></main>
 <dialog id="editor" aria-labelledby="editor-title"><form id="form"><h2 id="editor-title">Make it yours.</h2><p>Add an app to your personal launchpad.</p><label class="field">App name<input id="app-name" required maxlength="40" placeholder="e.g. Xalt" autocomplete="off"></label><label class="field">A short description<input id="app-description" maxlength="70" placeholder="What do you use it for?" autocomplete="off"></label><label class="field">Website link<input id="app-url" type="text" required placeholder="https://your-app.com" inputmode="url" autocomplete="off"></label><div class="error" id="error" role="alert"></div><div class="actions"><button type="button" id="cancel">Cancel</button><button class="save" type="submit">Save app</button></div></form></dialog><div class="toast" id="toast" role="status"></div>
 <script>
-// Eight app slots. You can also set the names, descriptions and URLs here before hosting.
+// App defaults. You can also set the names, descriptions and URLs here before hosting.
 const defaults = [
   {
     "name": "Personal site",
@@ -63,7 +65,8 @@ const defaults = [
     "name": "AveroDesk",
     "description": "Open your AveroDesk workspace",
     "url": "https://averodesk.vercel.app/app"
-  }
+  },
+  {"name":"Device Lab","description":"Test your sites at every screen size","url":"/device-lab.html"}
 ];
 defaults.forEach((app,i)=>app.theme=i);
 const paths = [
@@ -78,8 +81,9 @@ const paths = [
 ];
 const colors=[['#edf1e8','#66805a'],['#f0edfa','#8a74b1'],['#faf0e4','#b18d56'],['#eaf2f8','#678eab'],['#faedef','#b67c87'],['#f5f1e4','#ab9855'],['#e9f3ed','#5f9678'],['#eeedf7','#8581ae']];
 const key='isaac-launchpad-v2';let apps=defaults.map(a=>({...a}));
-function safeUrl(value){try{const u=new URL(value);return ['http:','https:'].includes(u.protocol)&&!u.username&&!u.password?u.href:''}catch{return ''}}
-try{const saved=JSON.parse(localStorage.getItem(key));if(Array.isArray(saved)&&saved.length===8&&saved.every(a=>a&&typeof a.name==='string'&&typeof a.description==='string'&&typeof a.url==='string'))apps=saved.map((a,i)=>({...a,url:safeUrl(a.url),theme:Number.isInteger(a.theme)&&a.theme>=0&&a.theme<8?a.theme:Math.max(0,defaults.findIndex(d=>d.url===safeUrl(a.url))>=0?defaults.findIndex(d=>d.url===safeUrl(a.url)):i)}))}catch{}
+function safeUrl(value){if(value==='/device-lab.html'||value==='device-lab.html')return '/device-lab.html';try{const u=new URL(value);return ['http:','https:'].includes(u.protocol)&&!u.username&&!u.password?u.href:''}catch{return ''}}
+try{const saved=JSON.parse(localStorage.getItem(key));if(Array.isArray(saved)&&saved.length>=8&&saved.length<=defaults.length&&saved.every(a=>a&&typeof a.name==='string'&&typeof a.description==='string'&&typeof a.url==='string'))apps=saved.map((a,i)=>({...a,url:safeUrl(a.url),theme:Number.isInteger(a.theme)&&a.theme>=0&&a.theme<defaults.length?a.theme:Math.max(0,defaults.findIndex(d=>d.url===safeUrl(a.url))>=0?defaults.findIndex(d=>d.url===safeUrl(a.url)):i)}))}catch{}
+if(!apps.some(a=>a.theme===8))apps.push({...defaults[8]});
 const grid=document.querySelector('#grid'),search=document.querySelector('#search'),editor=document.querySelector('#editor');let active=0;
 const svg=(body)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+body+'</svg>';
 const arrow=svg('<path d="M6 18 18 6M6 6h12v12"/>');
@@ -92,8 +96,10 @@ const themes=[
  ['#f2eade','#514235','#99816c','#e9dfd0','AI / Research'],
  ['#222322','#eff3ed','#a3b59f','#171917','Design / Archive'],
  ['#141a26','#e6f6fa','#809fae','#0c1420','News / Daily brief'],
- ['#eef3ec','#254c43','#7a9488','#dce9de','Work / Productivity']
+ ['#eef3ec','#254c43','#7a9488','#dce9de','Work / Productivity'],
+ ['#e9eee3','#334f31','#809573','#dde7d2','Design / Device testing']
 ];
+const labArt='<div class="art lab-art"><span class="app-tag">ONE SITE. EVERY SCREEN.</span><span class="lab-screen wide"><i></i><b></b><em></em></span><span class="lab-screen medium"><i></i><b></b><em></em></span><span class="lab-screen small"><i></i><b></b><em></em></span><span class="lab-art-name">device<span>lab.</span></span></div>';
 const artworks=[
  '<div class="art personal-art"><span class="app-tag">ISAAC CONTEH — 2026</span><span class="art-title">Hello, I’m<br>Isaac.</span><small>Digital designer & maker</small></div>',
  '<div class="art xalt-art"><svg viewBox="0 0 300 174" preserveAspectRatio="none"><defs><radialGradient id="xglow"><stop stop-color="#ba861e" stop-opacity=".8"/><stop offset="1" stop-color="#211b10" stop-opacity="0"/></radialGradient></defs><rect width="300" height="174" fill="#100e0b"/><ellipse cx="160" cy="172" rx="175" ry="165" fill="url(#xglow)"/><g fill="none" stroke="#e7b33d" opacity=".16"><ellipse cx="150" cy="173" rx="210" ry="90"/><ellipse cx="150" cy="173" rx="180" ry="72"/><ellipse cx="150" cy="173" rx="150" ry="54"/></g></svg><span class="art-title">xalt<span style="color:#e7b33d">.</span></span><span class="sub">EVERY TEAM. ONE PURPOSE.</span></div>',
@@ -102,7 +108,8 @@ const artworks=[
  '<div class="art claude-art"><span class="asterisk">✳</span><span class="art-title">Claude</span><span class="app-tag" style="top:auto;bottom:26px;left:auto;letter-spacing:2px">A LITTLE MORE CURIOUS.</span></div>',
  '<div class="art portfolio-art"><span class="app-tag">SELECTED WORK / VOL. 01</span><span class="art-title">Ideas into<br><i>interfaces.</i></span><span class="archive">THE ARCHIVE ↗</span></div>',
  '<div class="art brief-art"><span class="edition">YOUR WORLD. WELL EDITED.</span><span class="mast">Zac Brief.</span><span class="columns"><i></i><i></i><i></i></span></div>',
- '<div class="art avero-art"><span class="art-title">avero<span style="font-weight:350">desk</span><span style="color:#91ae9c">.</span></span><span class="board"><span class="lane"><b></b><i></i><i></i></span><span class="lane"><b></b><i></i><i></i></span><span class="lane"><b></b><i></i></span></span></div>'
+ '<div class="art avero-art"><span class="art-title">avero<span style="font-weight:350">desk</span><span style="color:#91ae9c">.</span></span><span class="board"><span class="lane"><b></b><i></i><i></i></span><span class="lane"><b></b><i></i><i></i></span><span class="lane"><b></b><i></i></span></span></div>',
+ labArt
 ];
 
 function render(){
@@ -113,7 +120,7 @@ function render(){
   shown++;const card=document.createElement('article');card.className='card';
   ['--cardbg','--cardfg','--cardmuted','--artbg'].forEach((v,j)=>card.style.setProperty(v,themes[i][j]));
   const link=document.createElement(app.url?'a':'button');link.className='card-link';
-  if(app.url){link.href=app.url;link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label','Open '+app.name+' in a new tab')}else{link.type='button';link.setAttribute('aria-label','Set up '+app.name);link.onclick=()=>edit(position)}
+  if(app.url){link.href=app.url;link.target=app.url==='/device-lab.html'?'_self':'_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label','Open '+app.name+(app.url==='/device-lab.html'?'':' in a new tab'))}else{link.type='button';link.setAttribute('aria-label','Set up '+app.name);link.onclick=()=>edit(position)}
   link.innerHTML=artworks[i];link.firstElementChild.setAttribute('aria-hidden','true');
   const meta=document.createElement('div');meta.className='app-meta';
   const label=document.createElement('span');label.className='app-label';label.textContent=themes[i][4];
@@ -129,15 +136,16 @@ function render(){
  document.querySelector('#count').textContent=String(shown).padStart(2,'0');
  if(!shown){const empty=document.createElement('div');empty.className='empty';empty.textContent='No apps found. Try another name.';grid.append(empty)}
  const connected=apps.filter(a=>a.url).length;
- document.querySelector('#hint').textContent=connected+' destinations connected · Opens in a new tab · Made for your everyday.';
+ document.querySelector('#hint').textContent=connected+' destinations connected · Made for your everyday.';
 }
 
 function moveApp(position,delta){const next=position+delta;if(next<0||next>=apps.length)return;[apps[position],apps[next]]=[apps[next],apps[position]];let message='App order saved in this browser.';try{localStorage.setItem(key,JSON.stringify(apps))}catch{message='Order changed for this visit; browser storage is unavailable.'}render();const toast=document.querySelector('#toast');toast.textContent=message;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>toast.textContent='',3000);const moved=grid.querySelector('.card:nth-child('+(next+1)+') .reorder button');moved?.focus()}
 function edit(i){active=i;document.querySelector('#app-name').value=apps[i].name;document.querySelector('#app-description').value=apps[i].description;document.querySelector('#app-url').value=apps[i].url;document.querySelector('#error').textContent='';editor.showModal();document.querySelector('#app-name').focus()}
 document.querySelector('#cancel').onclick=()=>editor.close();
-document.querySelector('#form').onsubmit=e=>{e.preventDefault();const name=document.querySelector('#app-name').value.trim(),description=document.querySelector('#app-description').value.trim();let raw=document.querySelector('#app-url').value.trim();if(!/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw))raw='https://'+raw;const url=safeUrl(raw);if(!name||!url){document.querySelector('#error').textContent='Enter an app name and a valid HTTP or HTTPS website link.';return}apps[active]={...apps[active],name,description,url};let message='App saved. You’re ready to go.';try{localStorage.setItem(key,JSON.stringify(apps))}catch{message='Updated for this visit. Browser storage is unavailable.'}render();editor.close();const toast=document.querySelector('#toast');toast.textContent=message;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>toast.textContent='',3500)};
+document.querySelector('#form').onsubmit=e=>{e.preventDefault();const name=document.querySelector('#app-name').value.trim(),description=document.querySelector('#app-description').value.trim();let raw=document.querySelector('#app-url').value.trim();if(raw!=='/device-lab.html'&&raw!=='device-lab.html'&&!/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw))raw='https://'+raw;const url=safeUrl(raw);if(!name||!url){document.querySelector('#error').textContent='Enter an app name and a valid HTTP or HTTPS website link.';return}apps[active]={...apps[active],name,description,url};let message='App saved. You’re ready to go.';try{localStorage.setItem(key,JSON.stringify(apps))}catch{message='Updated for this visit. Browser storage is unavailable.'}render();editor.close();const toast=document.querySelector('#toast');toast.textContent=message;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>toast.textContent='',3500)};
 search.addEventListener('input',render);document.querySelector('#manage').onclick=function(){const enabled=grid.classList.toggle('editing');this.setAttribute('aria-pressed',String(enabled));this.querySelector('span').textContent=enabled?'Done editing':'Edit apps'};
 function tick(){const now=new Date;document.querySelector('#clock').textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});document.querySelector('#date').textContent=now.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}tick();setInterval(tick,1000);render();
 </script>
 </body>
 </html>
+

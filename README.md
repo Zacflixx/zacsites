@@ -37,3 +37,11 @@ This is custom software, not an independently audited password manager. A compro
 ## Development
 
 `npm install`, then `npm test` runs encryption and sync endpoint tests. Use Netlify Dev for the backend (with ISAAC_VAULT_AUTH in a local, uncommitted `.env`). A plain static file server only previews the landing page; vault sync needs the Function. Netlify Dev uses a separate local Blobs sandbox. Static public files are under `public/`; only that directory is published. Function code and tests live outside the public directory.
+
+## Device Lab
+
+The ninth app opens `/device-lab.html` in the same tab. Device Lab is a responsive viewport preview tool: enter a URL, choose phone/tablet/desktop or custom dimensions, rotate panels, focus a screen, change zoom, and reload previews. No sign-in is required. Existing saved eight-app names, links, themes, and ordering are preserved when the Device Lab entry is added.
+
+Embedded previews run in the current browser and can share the target site's session. They are not isolated Playwright contexts, Safari emulation, or screenshot/error-reporting runs. A target's frame policies, mixed-content rules, or third-party-cookie policies can block previews or login flows; use Open to visit it directly. The page does not proxy or bypass target security headers.
+
+For real isolated browser contexts and screenshots, download `public/downloads/device_test.py` from the page and export `device-lab.json`. Run locally with Python: `pip install playwright`, `playwright install chromium`, then `python device_test.py --config device-lab.json --headed`. In headed mode the runner stays open for manual testing until Enter is pressed, then takes final screenshots. It also writes `screenshots/report.json`. This is a local runner, not an installed remote-browser backend.
