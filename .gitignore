@@ -1,0 +1,5 @@
+isaac-vault-*.json
+*.vault.json
+.env
+.env.*
+.DS_Store

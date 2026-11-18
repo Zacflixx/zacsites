@@ -1,0 +1,3 @@
+[build]
+  publish = "."
+# No build command, dependencies, server, or environment variables required.
