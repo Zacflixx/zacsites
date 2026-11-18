@@ -4,9 +4,10 @@ let key=null,salt=null,data=null,snapshot=null,editing=null,pendingImport=null,b
 const say=message=>$('notice').textContent=message;
 async function api({method='GET',envelope=null,revision=null,token=authToken,config=false,conditional=false}={}){
  const headers={};if(token)headers.Authorization='Bearer '+token;
- if(envelope){headers['Content-Type']='application/json';if(revision)headers['If-Match']=revision;else headers['If-None-Match']='*'}
- if(conditional&&revision)headers['If-None-Match']=revision;
- let response;try{response=await fetch(API+(config?'?action=config':''),{method,headers,credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(20000),...(envelope?{body:JSON.stringify(envelope)}:{})})}catch{throw Error('Cannot reach vault sync. Check your connection; changes have not been saved.')}
+ if(envelope)headers['Content-Type']='application/json';
+ // Keep revisions in application data: CDN layers can consume HTTP conditional headers.
+ const query=config?'?action=config':conditional&&revision?'?revision='+encodeURIComponent(revision):'';
+ let response;try{response=await fetch(API+query,{method,headers,credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(20000),...(envelope?{body:JSON.stringify({envelope,revision})}:{})})}catch{throw Error('Cannot reach vault sync. Check your connection; changes have not been saved.')}
  if(response.status===304)return{unchanged:true};
  let result;try{result=await response.json()}catch{throw Error('Vault sync is not deployed yet. Deploy this GitHub version on Netlify, then retry.')}
  if(!response.ok){const error=Error(result.error||(response.status===429?'Too many requests. Wait a minute and try again.':'Sync failed.'));error.status=response.status;throw error}return result;
