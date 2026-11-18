@@ -1,34 +1,39 @@
-# Isaac — personal launchpad
+# Isaac — apps and encrypted synced vault
 
-A static landing page with eight themed app cards, app editing/reordering, and a local encrypted vault for passwords and grouped text notes.
+The landing page and all app links open normally. Only the private vault requires a passphrase. The same passphrase decrypts your vault and authorizes syncing; there is no separate account or site-wide login.
 
-## Netlify from GitHub
+## Netlify setup (once)
 
-1. In Netlify, choose **Add new project → Import an existing project → GitHub**.
-2. Select **Zacflixx/zacsites** and branch **main**.
-3. Leave the build command empty. Publish directory is **.** (also set in `netlify.toml`).
-4. Deploy. No environment variables or paid database are needed. Later commits to main trigger a new deployment.
+Connect Netlify to **Zacflixx/zacsites**, branch **main**. `netlify.toml` now sets build command **npm run build**, publish directory **public**, Functions directory **netlify/functions**, and Node **22**. Netlify installs the pinned `@netlify/blobs` dependency automatically. Do not use the older static-only ZIP for this version: it does not contain the sync backend.
 
-Use the final HTTPS address consistently. Different Netlify previews, custom domains, browsers, profiles, and devices have separate browser storage.
+1. Deploy this repository to Netlify.
+2. Open **Private vault**. If sync has not been activated, the page shows **One-time sync setup**.
+3. Enter and confirm a strong master passphrase (12+ characters). If you already have a local vault, use its existing passphrase so it can be migrated. Select **Generate Netlify setting**.
+4. Copy the generated value. In your Netlify project's environment variables, add **ISAAC_VAULT_AUTH** with this value. Give it **Functions** scope and **Production** context. If scope selection is unavailable, use all scopes. Do not add it to this repo. This is a verifier derived in your browser; your actual passphrase is never sent to the server.
+5. Redeploy the site to apply the variable. Return to the vault and select **Check connection**, then unlock with the same passphrase.
 
-## Apps
+On another phone, browser, or computer: open the same Netlify site → Private vault → enter that passphrase. The encrypted vault loads automatically. Changes save to the cloud immediately; an unlocked browser checks for other-browser changes every 30 seconds, and **Sync now** refreshes on demand. Reopening a locked vault always fetches the latest copy. Internet access is required. App order and app edits still save per browser.
 
-Choose **Edit apps** to edit app names/links or use the arrows to change their order. These choices save in this browser. App branding stays attached when cards move. To change the defaults for everyone, edit the `defaults` array in `index.html` and its order; keep each app's `theme` index consistent if you reorder the source array.
+Sync uses Netlify Blobs and Functions within your existing Netlify project; no separate database account, browser API key, or Netlify access token is needed. Usage counts against your Netlify plan. Unconfigured endpoints cannot read or write a vault. Set the verifier in the Production context only so deploy previews do not gain production-vault access. Moving to a different Netlify project does not move its vault storage automatically; keep an encrypted backup for that case.
 
-## Vault
+## Existing vaults and backups
 
-Open **Private vault**, choose a strong master passphrase (12+ characters), and add passwords or notes. Use **Group** to organize related text entries. Passwords can be revealed or copied; notes and usernames can be copied too.
+When no cloud vault exists, the first successful unlock migrates an older vault found in that browser (using its original passphrase). It uploads only the encrypted contents and keeps the original local copy untouched. If a cloud vault already exists, it is authoritative; local vaults are not silently merged.
 
-All entry contents are encrypted before browser storage using AES-256-GCM, a random 96-bit nonce for every save, and a 256-bit key derived with PBKDF2-HMAC-SHA-256 (600,000 iterations, random 128-bit salt). The master passphrase and derived key are not persisted. The vault locks after five minutes idle, on leaving the tab, and on relevant changes in another tab. Entry text is rendered as text, never HTML. Netlify applies restrictive headers to `vault.html`. There are no analytics, external scripts, or vault network requests.
+**Export backup** is optional protection against accidental deletion or losing the Netlify project. You do not need it to move between browsers. **Restore**, available after unlocking, decrypts a chosen backup locally and re-encrypts its contents with the current vault key before syncing. It replaces the shared contents after confirmation, and does not change the current vault passphrase.
 
-**Export backup** downloads an encrypted JSON file. Export after important changes and before clearing browser storage or changing domains. Keep that file outside the repo, for example in your personal backup storage. **Restore** asks for the backup's passphrase and confirms before replacing an existing vault. A backup is a snapshot; it does not sync changes between devices.
+Never commit vault backups, real passwords, private notes, master passphrases, or the ISAAC_VAULT_AUTH value. There is no master-passphrase recovery. Do not regenerate the Netlify setting with a different passphrase for an existing vault; this does not re-encrypt its data.
 
-There is no recovery for a forgotten master passphrase. Clearing browser data can erase the vault. No passwords, private notes, master passphrase, keys, or vault backups belong in this repository or Netlify environment variables. The JSON is created when you use the vault; no shared vault JSON is deployed.
+## Security and behavior
 
-This is a small custom vault, not an independently audited password manager. A compromised browser/device, malicious extensions, or modified site code while the vault is unlocked can access its contents. Use an established password manager for high-value credentials. Clipboard copies stay in the clipboard until replaced.
+- AES-256-GCM with a fresh random 96-bit nonce for every save; PBKDF2-HMAC-SHA-256 with 600,000 iterations and random 128-bit salt for the encryption key.
+- A separate, purpose-specific PBKDF2 derivation generates the sync credential. Only its SHA-256 verifier is configured server-side. Requests use the derived credential in an Authorization header over HTTPS. Neither the encryption key nor master passphrase is uploaded.
+- The backend only exposes encrypted envelopes after authorization. It uses strong reads and conditional writes with ETags; stale saves are rejected instead of overwriting newer changes. The editor retains an unsaved entry when a conflict or connection failure occurs. Close the editor, sync the latest copy, and reapply your change. Saves do not silently fall back to a separate local-only vault.
+- Encrypted envelopes are limited to 2 MB, with strict format validation and a function rate limit. Responses disable caching. Passphrases, tokens, decrypted entries, and derived keys remain in memory and are cleared from app state/DOM on locking. JavaScript cannot guarantee physical memory erasure.
+- The vault locks after five minutes idle and when leaving the tab. Private content is rendered as text. The vault has no third-party scripts, analytics, or service worker; its CSP allows same-origin sync only. Clipboard copies remain in the clipboard until replaced.
 
-## Local preview / tests
+This is custom software, not an independently audited password manager. A compromised browser/device, malicious extension, or modified site code while the vault is unlocked can access contents. Use an established password manager for high-value credentials.
 
-Run `python3 -m http.server 8080` in this directory and open `http://localhost:8080`. The vault requires HTTPS or localhost; do not open `vault.html` as a local file.
+## Development
 
-Run `node --test tests/crypto.test.mjs` to verify encryption, wrong-passphrase/tamper rejection, format validation, and fresh nonces. No npm install is required (Node 20+).
+`npm install`, then `npm test` runs encryption and sync endpoint tests. Use Netlify Dev for the backend (with ISAAC_VAULT_AUTH in a local, uncommitted `.env`). A plain static file server only previews the landing page; vault sync needs the Function. Netlify Dev uses a separate local Blobs sandbox. Static public files are under `public/`; only that directory is published. Function code and tests live outside the public directory.

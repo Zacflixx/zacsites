@@ -1,3 +1,10 @@
 [build]
-  publish = "."
-# No build command, dependencies, server, or environment variables required.
+  command = "npm run build"
+  publish = "public"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"

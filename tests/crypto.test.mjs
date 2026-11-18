@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
-import {derive,seal,open,validate,bytes,base64} from '../assets/crypto.mjs';
+import {derive,seal,open,validate,bytes,base64} from '../public/assets/crypto.mjs';
 const password='a test passphrase only';
 const data={version:1,entries:[{id:'test',title:'Private <script> text',group:'Personal',username:'demo',password:'SECRET-DEMO-ONLY',url:'https://example.com',notes:'Unicode 🔐\nA grouped note'}]};
 test('encrypted round trip, fresh nonce, no plaintext in envelope, wrong passphrase and tamper rejection',async()=>{
