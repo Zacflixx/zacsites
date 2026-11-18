@@ -20,7 +20,7 @@ function gate(){
  $('gate-help').textContent=!remoteConfig?'Checking the secure connection. Your apps remain freely accessible.':remoteConfig.configured?'One passphrase. The same encrypted vault, on every browser.':'Choose your vault passphrase (12+ characters). Use your existing vault passphrase if you already saved entries.';
  $('unlock').textContent=remoteConfig?.configured?'Unlock & sync →':'Generate Netlify setting →';$('unlock').disabled=!remoteConfig;
 }
-async function loadConfig(){try{remoteConfig=await api({config:true,token:null});$('gate-error').textContent='';if(remoteConfig.configured)$('setup-result').hidden=true}catch(e){remoteConfig=null;$('gate-error').textContent=e.message}gate()}
+async function loadConfig(){try{remoteConfig=await api({config:true,token:null});$('gate-error').textContent=remoteConfig.configurationError||'';if(remoteConfig.configured)$('setup-result').hidden=true}catch(e){remoteConfig=null;$('gate-error').textContent=e.message}gate()}
 function lock(message='Vault locked.'){
  generation++;key=null;salt=null;data=null;snapshot=null;editing=null;pendingImport=null;authToken=null;etag=null;
  $('entries').replaceChildren();$('group-list').replaceChildren();$('groups').replaceChildren(new Option('All groups',''));$('search').value='';$('entry-form').reset();$('unlock-form').reset();$('restore-form').reset();$('password').type='password';$('toggle-entry').textContent='Show';$('entry-dialog').close();$('restore-dialog').close();$('workspace').hidden=true;$('gate').hidden=false;say(message);gate();
@@ -32,7 +32,7 @@ $('unlock-form').onsubmit=e=>{e.preventDefault();transact(async ticket=>{
  if(!remoteConfig.configured){
   if(password.length<12)throw Error('Use at least 12 characters.');if(password!==$('confirm-master').value)throw Error('Passphrases do not match.');
   const setting=await makeSyncConfig(password);if(ticket!==generation||document.hidden)return;
-  $('sync-setting').value=setting;$('setup-result').hidden=false;$('unlock-form').reset();say('Copy the generated setting to Netlify, redeploy, then check the connection.');return;
+  $('sync-setting').value=setting;$('gate-error').textContent='';$('setup-result').hidden=false;$('unlock-form').reset();say('Copy the generated setting to Netlify, redeploy, then check the connection.');return;
  }
  const token=await deriveAuth(password,remoteConfig.authSalt);if(ticket!==generation||document.hidden)return;
  const cloud=await api({token});if(ticket!==generation||document.hidden)return;

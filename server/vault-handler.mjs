@@ -10,7 +10,12 @@ export function makeHandler({getStore,getConfig}){return async request=>{
   const url=new URL(request.url),origin=request.headers.get('origin');
   if(origin&&origin!==url.origin)return reply({error:'Origin not allowed.'},403);
   if(!['GET','PUT'].includes(request.method))return reply({error:'Method not allowed.'},405,{Allow:'GET, PUT'});
-  const setting=config(getConfig());
+  let setting;
+  try{setting=config(getConfig())}catch{
+   const message='ISAAC_VAULT_AUTH must contain the generated v1. setup value, not your passphrase. Generate the value below, replace the Netlify variable, and redeploy.';
+   if(request.method==='GET'&&url.searchParams.get('action')==='config')return reply({configured:false,configurationError:message});
+   return reply({error:message},503);
+  }
   if(request.method==='GET'&&url.searchParams.get('action')==='config')return reply(setting?{configured:true,authSalt:setting.salt}:{configured:false});
   if(!setting)return reply({error:'Complete the one-time sync setup first.'},503);
   if(!authorized(request,setting))return reply({error:'Could not unlock. Check your vault passphrase.'},401);

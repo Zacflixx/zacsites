@@ -35,3 +35,10 @@ test('storage failures are reported, not presented as successful saves',async()=
  const config=await makeSyncConfig(password),token=await deriveAuth(password,config.split('.')[1]);
  const handler=makeHandler({getConfig:()=>config,getStore:()=>{throw Error('Storage unavailable')}});assert.equal((await handler(request('GET',{token}))).status,503);
 });
+
+test('malformed Netlify variable explains setup and never grants vault access',async()=>{
+ let accessed=false;const handler=makeHandler({getConfig:()=> 'mistakenly-entered-plain-passphrase',getStore:()=>{accessed=true;return memoryStore()}});
+ const configResponse=await handler(request('GET',{query:'?action=config'}));assert.equal(configResponse.status,200);
+ const info=await configResponse.json();assert.equal(info.configured,false);assert(info.configurationError.includes('generated v1.'));assert(!JSON.stringify(info).includes('mistakenly-entered'));
+ assert.equal((await handler(request('GET',{token:'0'.repeat(64)}))).status,503);assert.equal(accessed,false);
+});
