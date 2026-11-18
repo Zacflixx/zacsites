@@ -1,0 +1,21 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{makeLayoutHandler}from'../server/layout-handler.mjs';import{createLayoutSync,mergeOrder}from'../public/assets/layout-sync.mjs';import{makeSyncConfig,deriveAuth}from'../public/assets/crypto.mjs';
+function store(){let entry=null,version=0;return{get order(){return entry?.order},async getWithMetadata(){return entry?{data:structuredClone(entry),etag:'"'+version+'"'}:null},async setJSON(_key,next,options){if(options.onlyIfNew&&entry||options.onlyIfMatch&&options.onlyIfMatch!=='"'+version+'"')return{modified:false};entry=structuredClone(next);return{modified:true,etag:'"'+(++version)+'"'}}}}
+const req=(method='GET',token=null,body=null)=>new Request('https://example.netlify.app/.netlify/functions/layout',{method,headers:{...(token?{Authorization:'Bearer '+token}:{}),...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
+test('layout reads stay public while shared writes require the existing passphrase credential',async()=>{
+ const setting=await makeSyncConfig('test vault phrase only'),token=await deriveAuth('test vault phrase only',setting.split('.')[1]),memory=store(),handler=makeLayoutHandler({getStore:()=>memory,getConfig:()=>setting});
+ assert.deepEqual(await(await handler(req())).json(),{order:null,revision:null});assert.equal((await handler(req('PUT',null,{order:[1,0],revision:null}))).status,401);assert.equal((await handler(req('POST',token))).status,200);
+ assert.equal((await handler(req('PUT',token,{order:[1,0],revision:null}))).status,200);assert.deepEqual((await(await handler(req())).json()).order,[1,0]);
+ assert.equal((await handler(req('PUT',token,{order:[1,1],revision:'"1"'}))).status,400);assert.equal((await handler(req('PUT',token,{order:[0,1]}))).status,428);assert.equal((await handler(req('PUT',token,{order:[0,1],revision:'"stale"'}))).status,409);assert.deepEqual(memory.order,[1,0]);
+ assert.equal((await handler(new Request('https://example.netlify.app/.netlify/functions/layout',{method:'PUT',headers:{Origin:'https://other.example'}}))).status,403);
+});
+test('order persists through refresh and a fresh device, including rapid reorders and explicit conflict retry',async()=>{
+ const password='test shared order phrase',setting=await makeSyncConfig(password),memory=store(),handler=makeLayoutHandler({getStore:()=>memory,getConfig:()=>setting});
+ const fetcher=async(url,options={})=>url.includes('vault?action=config')?Response.json({configured:true,authSalt:setting.split('.')[1]}):handler(new Request('https://example.netlify.app'+url,options));
+ function client(){let apps=Array.from({length:9},(_,theme)=>({theme,name:'App '+theme}));const messages=[];const sync=createLayoutSync({getApps:()=>apps,applyOrder:order=>apps=mergeOrder(apps,order),status:(...args)=>messages.push(args),fetcher});return{sync,messages,get apps(){return apps},set apps(a){apps=a}}}
+ const a=client();await a.sync.refresh();await assert.rejects(a.sync.begin('wrong passphrase'));await a.sync.begin(password);a.apps.reverse();assert.equal(await a.sync.save(),true);assert.deepEqual(memory.order,[8,7,6,5,4,3,2,1,0]);
+ const fresh=client();await fresh.sync.refresh();assert.deepEqual(fresh.apps.map(a=>a.theme),memory.order);const reload=client();await reload.sync.refresh();assert.deepEqual(reload.apps.map(a=>a.theme),memory.order);
+ await fresh.sync.begin(password);const first=a.sync.save();a.apps=[...a.apps.slice(1),a.apps[0]];const second=a.sync.save();await Promise.all([first,second]);assert.deepEqual(memory.order,a.apps.map(a=>a.theme));
+ fresh.apps.reverse();assert.equal(await fresh.sync.save(),false);assert.equal(fresh.sync.pending,true);assert(fresh.messages.at(-1)[1]);assert.equal(await fresh.sync.flush(),true);assert.deepEqual(memory.order,fresh.apps.map(a=>a.theme));
+ assert.equal(await fresh.sync.end(),true);await a.sync.end();await reload.sync.refresh();assert.deepEqual(reload.apps.map(a=>a.theme),memory.order);
+});
+test('new apps append without disturbing saved app order or custom labels',()=>{const apps=[{theme:0,name:'Custom label'},{theme:1},{theme:2}];assert.deepEqual(mergeOrder(apps,[1,0]).map(a=>a.theme),[1,0,2]);assert.equal(mergeOrder(apps,[1,0])[1].name,'Custom label')});

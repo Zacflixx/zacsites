@@ -51,3 +51,4 @@ export function makeHandler({getStore,getConfig}){return async request=>{
   return reply({etag:saved.etag});
  }catch{return reply({error:'Sync is unavailable. Check the connection and Netlify function configuration. No local-only save was made.'},503)}
 }}
+export {config as parseAuthConfig,authorized as isAuthorized};
